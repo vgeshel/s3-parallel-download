@@ -88,7 +88,7 @@ func doGet(s3c *s3.S3, bucket string, key string, done chan string, insecure boo
 	reader, err := buck.GetReader(key)
 
 	if err != nil {
-		done <- "ERROR " + bucket + "/" + key
+		done <- "ERROR " + fmt.Sprintf("%v", err) + ": " + bucket + "/" + key
 	} else {
 		writer, err := os.Create("/dev/null")
 
