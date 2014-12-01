@@ -57,7 +57,7 @@ func main() {
 		key := split[1]
 		cnt ++
 
-		go doGet(s3c, bucket, key, done, *insecure)
+		go doGet(s3c, bucket, key, done, *insecure, before)
 	}
 
 	if cnt > 0 {
@@ -76,7 +76,11 @@ func main() {
 
 }
 
-func doGet(s3c *s3.S3, bucket string, key string, done chan string, insecure bool) {
+func doGet(s3c *s3.S3, bucket string, key string, done chan string, insecure bool, before time.Time) {
+	path := bucket + "/" + key
+
+	fmt.Printf("starting %s in %v\n", path, time.Now().Sub(before))
+
 	if insecure {
 		tr := &http.Transport{
 			TLSClientConfig:    &tls.Config{InsecureSkipVerify: true},
@@ -95,6 +99,8 @@ func doGet(s3c *s3.S3, bucket string, key string, done chan string, insecure boo
 		if err != nil {
 			panic(err)
 		}
+
+		fmt.Printf("starting copy %s in %v\n", path, time.Now().Sub(before))
 
 		io.Copy(writer, reader)
 
