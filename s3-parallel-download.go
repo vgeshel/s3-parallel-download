@@ -63,7 +63,11 @@ func main() {
 	if cnt > 0 {
 		for {
 			donePath := <-done;
-			fmt.Printf("done %s in %v\n", donePath, time.Now().Sub(before))
+
+			if *verbose {
+				fmt.Printf("done %s in %v\n", donePath, time.Now().Sub(before))
+			}
+
 			cnt --
 
 			if cnt <= 0 {
